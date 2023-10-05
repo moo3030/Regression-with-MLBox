@@ -55,3 +55,4 @@ def run_batch_predictions(
 
 if __name__ == "__main__":
     run_batch_predictions()
+    
