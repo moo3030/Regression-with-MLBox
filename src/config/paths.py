@@ -31,8 +31,6 @@ SCALER_FILE = os.path.join(MODEL_ARTIFACTS_PATH, "scaler.joblib")
 ENCODER_FILE = os.path.join(MODEL_ARTIFACTS_PATH, "encoder.joblib")
 # Path to results stored by mljar-supervised
 RESULT_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "MLBox_artifacts")
-# Path to prediction file createdd by MLBox
-PREDICTION_ARTIFACT_FILE = os.path.join(RESULT_PATH, "target_predictions.csv")
 # Path to saved schema in artifacts directory
 SAVED_SCHEMA_DIR_PATH = os.path.join(MODEL_ARTIFACTS_PATH, "schema")
 # Name of the preprocessing pipeline file

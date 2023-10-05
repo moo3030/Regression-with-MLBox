@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 
 from config import paths
@@ -41,7 +42,9 @@ def run_batch_predictions(
     logger.info("Making predictions...")
     predict_with_model(model, x_test)
 
-    predictions_arr = pd.read_csv(paths.PREDICTION_ARTIFACT_FILE)["target_predicted"]
+    prediction_file_name = f"{data_schema.target}_predictions.csv"
+    prediction_file_path = os.path.join(paths.RESULT_PATH, prediction_file_name)
+    predictions_arr = pd.read_csv(prediction_file_path)[f"{data_schema.target}_predicted"]
     predictions_df = pd.DataFrame({data_schema.id: ids, model_config["prediction_field_name"]: predictions_arr})
 
     logger.info("Saving predictions...")
