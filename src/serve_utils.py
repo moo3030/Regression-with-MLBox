@@ -103,7 +103,7 @@ async def transform_req_data_and_make_predictions(
     predict_with_model(model_resources.predictor_model, data)
 
     prediction_file_name = f"{model_resources.data_schema.target}_predictions.csv"
-    prediction_file_path = os.path.join(paths.RESULT_PATH, prediction_file_name)
+    prediction_file_path = os.path.join(model_resources.predictor_model.result_path, prediction_file_name)
     predictions_arr = pd.read_csv(prediction_file_path)[f"{model_resources.data_schema.target}_predicted"]
     predictions_df = pd.DataFrame({model_resources.data_schema.id: ids, model_config["prediction_field_name"]: predictions_arr})
 

@@ -44,7 +44,7 @@ def run_batch_predictions(
     predict_with_model(model, x_test)
 
     prediction_file_name = f"{data_schema.target}_predictions.csv"
-    prediction_file_path = os.path.join(paths.RESULT_PATH, prediction_file_name)
+    prediction_file_path = os.path.join(model.result_path, prediction_file_name)
     predictions_arr = pd.read_csv(prediction_file_path)[f"{data_schema.target}_predicted"]
     predictions_df = pd.DataFrame({data_schema.id: ids, model_config["prediction_field_name"]: predictions_arr})
 
