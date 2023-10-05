@@ -77,7 +77,7 @@ In this section we cover the following:
 - Run the script `src/predict.py` to run batch predictions using the trained model. This script will load the artifacts and create and save the predictions in a file called `predictions.csv` in the path `./model_inputs_outputs/outputs/predictions/`.
 - Run the script `src/serve.py` to start the inference service, which can be queried using the `/ping` and `/infer` endpoints. The service runs on port 8080.
 
-### Note: MLBox works with python 3.5, 3.6 and 3.7, having a more recent versions might cause installation issues.
+#### Note: MLBox works with python 3.5, 3.6 and 3.7, having a more recent versions might cause installation issues. It is highly recommended to install python3.7 and create a virtual environment for the projects.
 
 ### To run with Docker
 
@@ -148,6 +148,7 @@ This configuration file is used to specify hyperparameters and settings for the 
 ```json
 {
   "seed_value": 123,
+  "max_evals": 20,
   "prediction_field_name": "prediction",
   "scoring": "neg_root_mean_squared_error",
   "algorithms": ["LightGBM", "RandomForest", "ExtraTrees"],
@@ -164,6 +165,13 @@ This configuration file is used to specify hyperparameters and settings for the 
 - **Type**: Integer
 - **Description**: Specifies the seed value for any random operations to ensure reproducibility.
 - **Example**: `"seed_value": 123`
+
+#### `max_evals`
+
+- **Type**: Integer
+- **Description**: Determines the maximum number of evaluations during the hyperparameter optimization process. It specifies the number of different hyperparameter combinations to try before stopping the search.
+- **Example**: If `max_evals` is set to 50, the optimization process will train and evaluate 50 different models (with 50 different hyperparameter sets) before selecting the best one.
+- **Usage**: Adjust max_evals based on your computational resources and the extent to which you want to search the hyperparameter space.
 
 #### `prediction_field_name`
 

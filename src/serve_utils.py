@@ -1,6 +1,9 @@
+
 """
 This script contains utility functions/classes that are used in serve.py
 """
+import os
+
 import uuid
 from typing import Any, Dict, Tuple
 
@@ -85,6 +88,7 @@ async def transform_req_data_and_make_predictions(
         Tuple[pd.DataFrame, dict]: Tuple containing transformed data and
             prediction response.
     """
+    model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
     logger.info(f"Predictions requested for {len(data)} samples...")
 
     # validate the data
@@ -96,10 +100,13 @@ async def transform_req_data_and_make_predictions(
     data = data.drop(columns=model_resources.data_schema.id)
 
     logger.info("Making predictions...")
-    predictions_arr = predict_with_model(
-        model_resources.predictor_model,
-        data,
-    )
+    predict_with_model(model_resources.predictor_model, data)
+
+    prediction_file_name = f"{model_resources.data_schema.target}_predictions.csv"
+    prediction_file_path = os.path.join(paths.RESULT_PATH, prediction_file_name)
+    predictions_arr = pd.read_csv(prediction_file_path)[f"{model_resources.data_schema.target}_predicted"]
+    predictions_df = pd.DataFrame({model_resources.data_schema.id: ids, model_config["prediction_field_name"]: predictions_arr})
+
     predictions_df = pd.DataFrame(
         {model_resources.data_schema.id: ids, "prediction": predictions_arr}
     )

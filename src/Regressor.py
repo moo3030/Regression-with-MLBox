@@ -14,9 +14,6 @@ from typing import List
 import matplotlib
 matplotlib.use('Agg')
 
-# os.environ["MPLCONFIGDIR"] = os.getcwd() + "/configs/"
-
-
 warnings.filterwarnings("ignore")
 
 PREDICTOR_FILE_NAME = "predictor.joblib"
@@ -100,9 +97,9 @@ class Regressor:
         self.best_model = self.predictor.optimise(
             space={
                 "est__param": {"search": "choice", "space": algorithms},
-                'est__max_depth': {"search": "choice", "space": [5, 10, 15, 20, None]},
-                'est__n_estimators': {"search": "choice", "space": [50, 100, 150, 200]},
-                'est__num_leaves': {"search": "choice", "space": [20, 30, 40]},  # specific to LightGBM,
+                'est__max_depth': self.model_config["est__max_depth"],
+                'est__n_estimators': self.model_config["est__n_estimators"],
+                'est__num_leaves': self.model_config["est__num_leaves"],  # specific to LightGBM,
                 'ne__numerical_strategy': {"search": "choice", "space": ["median"]},
                 'ce__strategy': {"search": "choice", "space": ["dummification"]},
             },
@@ -110,7 +107,7 @@ class Regressor:
                 "train": self.x,
                 "target": self.y
             },
-            max_evals=20
+            max_evals=self.model_config["max_evals"]
         )
         self._is_trained = True
 
