@@ -100,6 +100,7 @@ class Regressor:
                 'est__max_depth': self.model_config["est__max_depth"],
                 'est__n_estimators': self.model_config["est__n_estimators"],
                 'est__num_leaves': self.model_config["est__num_leaves"],  # specific to LightGBM,
+                'est__n_jobs': {"search": "choice", "space": [1]},
                 'ne__numerical_strategy': {"search": "choice", "space": ["median"]},
                 'ce__strategy': {"search": "choice", "space": ["dummification"]},
             },
