@@ -18,6 +18,7 @@ matplotlib.use('Agg')
 
 
 warnings.filterwarnings("ignore")
+
 PREDICTOR_FILE_NAME = "predictor.joblib"
 
 
@@ -74,7 +75,7 @@ class Regressor:
         self.best_model = None
         self._is_trained: bool = False
         self.x = train_input.drop(columns=[schema.target])
-        self.y = train_input[schema.target]
+        self.y = train_input[schema.target].astype(float)
         self.schema = schema
         self.model_name = "mlbox-regressor"
         self.model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
@@ -83,8 +84,8 @@ class Regressor:
             clear_dir(result_path)
 
         self.predictor = Optimiser(
-            scoring="neg_root_mean_squared_error",
-            n_folds=10,
+            scoring=self.model_config["scoring"],
+            n_folds=5,
             random_state=self.model_config["seed_value"],
             to_path=result_path
         )
@@ -95,9 +96,15 @@ class Regressor:
 
     def train(self) -> None:
         """Train the model on the provided data"""
+        algorithms = self.model_config["algorithms"]
         self.best_model = self.predictor.optimise(
             space={
-                "est__param": {"search": "choice", "space": ["LightGBM", "RandomForest", "ExtraTrees"]}
+                "est__param": {"search": "choice", "space": algorithms},
+                'est__max_depth': {"search": "choice", "space": [5, 10, 15, 20, None]},
+                'est__n_estimators': {"search": "choice", "space": [50, 100, 150, 200]},
+                'est__num_leaves': {"search": "choice", "space": [20, 30, 40]},  # specific to LightGBM,
+                'ne__numerical_strategy': {"search": "choice", "space": ["median"]},
+                'ce__strategy': {"search": "choice", "space": ["dummification"]},
             },
             df={
                 "train": self.x,

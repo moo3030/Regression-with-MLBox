@@ -1,17 +1,11 @@
 {
   "seed_value": 123,
   "prediction_field_name": "prediction",
-  "total_time_limit": 180,
-  "train_ensemble": true,
-  "stack_models": false,
-  "eval_metric": "rmse",
+  "scoring": "neg_root_mean_squared_error",
   "algorithms": [
-    "Linear",
-    "Random Forest",
-    "Extra Trees",
     "LightGBM",
-    "Xgboost",
-    "Nearest Neighbors"
+    "RandomForest",
+    "ExtraTrees"
   ]
 
 }

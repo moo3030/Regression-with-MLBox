@@ -1,5 +1,5 @@
 import os
-
+import warnings
 from config import paths
 from logger import get_logger, log_error
 from Regressor import Regressor
@@ -7,6 +7,8 @@ from schema.data_schema import load_json_data_schema, save_schema
 from utils import read_csv_in_directory, set_seeds
 from preprocessing.pipeline import run_pipeline
 
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
 logger = get_logger(task_name="train")
 
 
@@ -45,12 +47,12 @@ def run_training(
         for column in data_schema.categorical_features:
             x_train[column] = x_train[column].astype(str)
 
-        target = x_train[data_schema.target]
-        x_train = x_train.drop(columns=data_schema.target)
+        # target = x_train[data_schema.target]
+        # x_train = x_train.drop(columns=data_schema.target)
 
-        x_train = run_pipeline(x_train, data_schema, training=True, target=target)
+        # x_train = run_pipeline(x_train, data_schema, training=True, target=target)
 
-        x_train[data_schema.target] = target
+        # x_train[data_schema.target] = target
 
         regressor = Regressor(x_train, data_schema, result_path=result_path)
         regressor.train()
