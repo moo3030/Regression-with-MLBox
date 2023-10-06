@@ -111,17 +111,12 @@ class Regressor:
         )
         self._is_trained = True
 
-    def predict(self, inputs: pd.DataFrame) -> np.ndarray:
+    def predict(self, inputs: pd.DataFrame) -> None:
         """Predict labels for the given data.
 
         Args:
             inputs (pandas.DataFrame): The input data.
-
-        Returns:
-            np.ndarray: The output predictions.
         """
-        print(self.best_model.values())
-        print('-----------------------------')
         predictor = Predictor(to_path=self.result_path)
         predictor.fit_predict(self.best_model, {"train": self.x, "target": self.y, "test": inputs})
 
