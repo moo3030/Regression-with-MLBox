@@ -26,7 +26,7 @@ def run_training(
         saved_schema_dir_path (str, optional): The path where to save the schema.
         train_dir (str, optional): The directory path of the train data.
         predictor_dir_path (str, optional): Dir path to save the predictor model.
-        result_path (str, optional): Dir path to the save models (required by mljar).
+        result_path (str, optional): Dir path to the save models (required by MLBox).
     Returns:
         None
     """
