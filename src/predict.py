@@ -5,7 +5,7 @@ from config import paths
 from logger import get_logger
 from Regressor import Regressor, predict_with_model
 from schema.data_schema import load_saved_schema
-from utils import read_csv_in_directory, save_dataframe_as_csv, read_json_as_dict, set_seeds
+from utils import ResourceTracker, read_csv_in_directory, save_dataframe_as_csv, read_json_as_dict, set_seeds
 
 logger = get_logger(task_name="predict")
 
@@ -26,22 +26,23 @@ def run_batch_predictions(
     adds ids into the predictions dataframe,
     and saves the predictions as a CSV file.
     """
-    model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
+    with ResourceTracker(logger, monitoring_interval=0.1):
+        model_config = read_json_as_dict(paths.MODEL_CONFIG_FILE_PATH)
 
-    set_seeds(model_config["seed_value"])
+        set_seeds(model_config["seed_value"])
 
-    x_test = read_csv_in_directory(test_dir)
-    data_schema = load_saved_schema(saved_schema_dir)
-    ids = x_test[data_schema.id]
-    x_test.drop(columns=data_schema.id, inplace=True)
+        x_test = read_csv_in_directory(test_dir)
+        data_schema = load_saved_schema(saved_schema_dir)
+        ids = x_test[data_schema.id]
+        x_test.drop(columns=data_schema.id, inplace=True)
 
-    for column in data_schema.categorical_features:
-        x_test[column] = x_test[column].astype(str)
+        for column in data_schema.categorical_features:
+            x_test[column] = x_test[column].astype(str)
 
-    model = Regressor.load(predictor_dir)
+        model = Regressor.load(predictor_dir)
 
-    logger.info("Making predictions...")
-    predict_with_model(model, x_test)
+        logger.info("Making predictions...")
+        predict_with_model(model, x_test)
 
     prediction_file_name = f"{data_schema.target}_predictions.csv"
     prediction_file_path = os.path.join(model.result_path, prediction_file_name)
